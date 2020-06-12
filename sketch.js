@@ -12,18 +12,23 @@ let button2;
 let is_insert_par;
 
 // Control de velocidad
-let x_cont = 540; 
+let x_cont = 410; 
 let y_cont = 80; 
 let angle1;
+let angle2;
 let oldAngle1;
+let oldAngle2;
 let sent1;
+let sent2;
 let calcAngle1;
+let calcAngle2;
 let velocidadRPM;
+let ap;
 let rz = 35; //Diametro de control de velocidad
 let drag1 = false; //Estado del movimiento de perilla velocidad
 let drag2 = false; //Estado del movimiento de slide de apertura
 let slider;
-let ap;
+
 
 // Modulo de enesayo
 let x_mod = 50; //Posición del frame
@@ -106,6 +111,9 @@ let b;
 let caudal_ob_ant;
 let rug_ant;
 let dens_hg;
+let temp_table = [5, 10, 15, 20, 25, 30, 35, 40];
+let dens_table = [999.9, 999.7, 999.1, 998.0, 997.0, 996.0, 994.0, 992.1];
+let vis_table = [1.519, 1.307, 1.138, 1.002, 0.891, 0.798, 0.720, 0.653];
 
 function preload(){
 	logo_pucp = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/logo_pucp.png');
@@ -142,7 +150,7 @@ function preload(){
 	visor_man = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/visor_man.png');
 }
 
-function setup() {
+function setup(){
 	//940, 750
     createCanvas(950, 900);
     //createCanvas(displayWidth, displayHeight);
@@ -154,20 +162,20 @@ function setup() {
 	//Inputs de variables ambientales
     input1 = createInput();
     input1.position(x_par + 70, y_par + 63);
-    input1.style('width', '120px');
-    input2 = createInput();
-    input2.position(x_par + 70, y_par + 103);
-    input2.style('width', '120px');
-    input3 = createInput();
-    input3.position(x_par + 70, y_par + 143);
-    input3.style('width', '120px');
+    input1.style('width', '50px');
+    //input2 = createInput();
+    //input2.position(x_par + 70, y_par + 103);
+    //input2.style('width', '120px');
+    //input3 = createInput();
+    //input3.position(x_par + 70, y_par + 143);
+    //input3.style('width', '120px');
 	//Bóton
     button1 = createButton('Ingresar P.A.');
-    button1.position(x_par + 330, y_par + 130);
+    button1.position(x_par + 230, y_par + 130);
 	button1.size(100,50);
 	num_hor = 0;
 	button2 = createButton(horarios[num_hor]);
-    button2.position(x_par + 330, y_par + 55);
+    button2.position(x_par + 230, y_par + 55);
     button2.size(100,50);
 	is_change_hor = false;
 	is_insert_par = false;
@@ -181,11 +189,16 @@ function setup() {
     sent1 = 'AntiHorario';
     calcAngle1 = 0;
     velocidadRPM = 0;
-	// Control de apertura--------------------------------------------
+	angle2 = 135;
+    oldAngle2 = 0;
+    sent2 = 'AntiHorario';
+    calcAngle2 = 0;
     ap = 0;
-    slider = createSlider(0,100,0,10);
-    slider.position(x_cont+180, y_cont+120);
-    slider.style('width', '150px'); 
+	// Control de apertura--------------------------------------------
+    //ap = 0;
+    //slider = createSlider(0,100,0,10);
+    //slider.position(x_cont+370, y_cont+120);
+    //slider.style('width', '150px'); 
 	//Valores de valvulas
 	val_des_b1_ab = false;
 	val_int_ab = false;
@@ -211,9 +224,9 @@ function setup() {
 	caudal_ob = 0.0;
 	altura_ob = 0.0;
 	re = 0;
-	dens = 1000.00;
+	dens = 997.0;
 	dens_hg = 13530.00;
-	vis = 1.569; //*10(-3)
+	vis =  0.891; //*10(-3)
 	factor_fric = 0;
 	is_rug1 = true;
 	is_rug2 = false;
@@ -240,10 +253,10 @@ function draw(){
     fill(0);
     textStyle(BOLD);
     textSize(14);
-    text('X =  ', 470 , 20);
-	text(mouseX, 490 , 20);
-    text('Y =  ', 470 , 40);
-	text(mouseY, 490 , 40);
+    //text('X =  ', 470 , 20);
+	//text(dens, 490 , 20);//mouseX
+    //text('Y =  ', 470 , 40);//mouseY
+	//text(vis, 490 , 40);
     image(logo_pucp, 60, 10);
     image(logo_laben, 740, 10);
 	//Parámetros ambientales
@@ -270,12 +283,12 @@ function draw(){
 	if(is_serie){
 		fill(0);
 		textSize(14)
-		text(round(fact_fric,5),600,30);
+		//text(round(fact_fric,5),600,30);
 		a = 1.00/sqrt(fact_fric);
 		re = 1000*((dens*(dia/1000.00)*4*(caudal_ob/3600.00))/(3.1416*((dia/1000.00)**2.00)))/vis;
 		b = (log(((rug/1000.00)/(3.7*dia/1000.00))+(2.51/(re*sqrt(fact_fric))))/log(10.00))*(-2.00);
-		text(round(a,2),600,15);
-		text(round(b,2),600,45);
+		//text(round(a,2),600,15);
+		//text(round(b,2),600,45);
 		//text(round(caudal_ob,2),600,60);
 		//text(round(re,2),600,75);
 		if(abs(b-a)>0.150){
@@ -285,8 +298,8 @@ function draw(){
 			dp_acc = fact_fric*(((2.118+0.315+2.125)/(dia/1000))+60)*dens*(((caudal_ob/3600.00)*4/(3.1416*((dia/1000.00)**2.00)))**2.00)/2.00;
 			alt_tub_ob = 1000.00*dp_tub/(9.81*(dens_hg-dens));
 			alt_acc_ob = 1000.00*dp_acc/(9.81*(dens_hg-dens));
-			text(round(alt_tub_ob,2),650,15);
-			text(round(alt_acc_ob,2),650,45);
+			//text(round(alt_tub_ob,2),650,15);
+			//text(round(alt_acc_ob,2),650,45);
 		}
 		if(alt_tub<alt_tub_ob){
 			alt_tub = alt_tub + 0.2;
@@ -302,15 +315,19 @@ function draw(){
 }
 
 function mousePressed() {
-	if((mouseX>x_par+330)&&(mouseX<x_par+430)&&(mouseY>y_par+55)&&(mouseY<y_par+105)){
+	if((mouseX>x_par+230)&&(mouseX<x_par+330)&&(mouseY>y_par+55)&&(mouseY<y_par+105)){
 		is_change_hor = true;
 	}
-	if((mouseX>x_par+330)&&(mouseX<x_par+430)&&(mouseY>y_par+130)&&(mouseY<y_par+180)){
+	if((mouseX>x_par+230)&&(mouseX<x_par+330)&&(mouseY>y_par+130)&&(mouseY<y_par+180)){
 		is_insert_par = true;
 	}
     //Perilla de velocidad
     if (dist(mouseX, mouseY, x_cont + 80, y_cont + 80) < rz) {
         drag1 = true;
+    }
+	//Perilla de apertura
+	if (dist(mouseX, mouseY, x_cont + 410, y_cont + 80) < rz) {
+        drag2 = true;
     }
 	x_mouse = mouseX;
 	y_mouse = mouseY;
@@ -329,22 +346,27 @@ function mouseReleased(){
 	if(is_insert_par){
 		is_insert_par = false;
 		iv1 = float(input1.value());
-		iv2 = float(input2.value());
-		iv3 = float(input3.value());
-		if (iv1 > -10 && iv1 < 35 && iv1 != '') {
+		if (iv1 >= 5 && iv1 <= 40 && iv1 != '') {
 			temp_ambiente = float(input1.value()); //Temperatura
-		}
-		if (iv2 > 80 && iv2 < 120 && iv2 != '') {
-			pres_ambiente = float(input2.value()); //Presión
-		}
-		if (iv3 > 60 && iv3 < 101 && iv3 != '') {
-			hum_ambiente = float(input3.value()); //Humedad
+			for(i=0; i<9; i++){
+				if(temp_ambiente==temp_table[i]){
+					dens = dens_table[i];
+					vis = vis_table[i];
+				}
+			}
+			for(i=0; i <8; i++){
+				if(temp_ambiente > temp_table[i]){
+					if(temp_ambiente < temp_table[i+1]){
+						vis = (((vis_table[i+1]-vis_table[i])/(temp_table[i+1]-temp_table[i]))*(temp_ambiente-temp_table[i]))+vis_table[i];
+						dens = (((dens_table[i+1]-dens_table[i])/(temp_table[i+1]-temp_table[i]))*(temp_ambiente-temp_table[i]))+dens_table[i];
+					}
+				}
+			}
 		}
 		input1.value('');
-		input2.value('');
-		input3.value('');
 	}
     drag1 = false;
+	drag2 = false;
 	if(mod_vision){
 		if (dist(x_mouse, y_mouse, 922, 555) < 40) {
 			if(vis_num == 1){
@@ -358,7 +380,7 @@ function mouseReleased(){
 			}else{
 				vis_num = vis_num + 1;
 			}
-		}else if(dist(x_mouse, y_mouse, 845, 145) < 50){
+		}else if(dist(x_mouse, y_mouse, 655, 225) < 50){
 			mod_vision = false;
 			mod_operacion = true;
 			vis_num = 1;
@@ -366,7 +388,7 @@ function mouseReleased(){
 		}
 	}
 	if(mod_operacion){
-		if(dist(x_mouse, y_mouse, 745, 145) < 50){
+		if(dist(x_mouse, y_mouse, 655, 145) < 50){
 			mod_operacion = false;
 			mod_vision = true;
 			vis_num = 1;
@@ -441,12 +463,12 @@ function mouseReleased(){
 		vis_num = 2;
 	}
 	if(is_paralelo){
-		ap = slider.value();
+		//ap = slider.value();
 		caudal_max = 3600.00*(2.00*velocidadRPM/1000000.00);
 		caudal_ob = (ap/100.00)*caudal_max;
 		altura_ob = 1000.00*(((caudal_ob/3600.00)/(2.361*Cd[num_hor]))**(2/5));
 	}else if(is_serie){
-		ap = slider.value();
+		//ap = slider.value();
 		caudal_max = 1800.00*(2.00*velocidadRPM/1000000.00);
 		caudal_ob = (ap/100.00)*caudal_max;
 		altura_ob = 1000.00*(((caudal_ob/3600.00)/(2.361*Cd[num_hor]))**(2/5));
@@ -494,20 +516,22 @@ function mouseReleased(){
 function dib_parametros(x1, y1){
 	fill(250);
     strokeWeight(1);
-    rect(x1, y1, 470, 200);
-    line(x1 + 280, y1 + 10, x1 + 280, y1 + 120);
-	line(x1 + 280, y1 + 120, x1 + 460, y1 + 120);
+    rect(x1, y1, 350, 200);
+    line(x1 + 200, y1 + 10, x1 + 200, y1 + 120);
+	line(x1 + 200, y1 + 120, x1 + 340, y1 + 120);
     // Texto
     fill('black');
     textStyle(BOLD);
     textSize(14);
-    text('PARÁMETROS ', x1 + 150 , y1 + 20);
-    text('AMBIENTALES ', x1 + 150 , y1 + 40);
-    text('SELECCIONAR ', x1 + 380, y1 + 20);
-    text('HORARIO ', x1 + 380, y1 + 40);
+    text('PARÁMETROS', x1 + 100 , y1 + 20);
+    text('DEL AGUA', x1 + 100 , y1 + 40);
+    text('SELECCIONAR ', x1 + 280, y1 + 20);
+    text('HORARIO ', x1 + 280, y1 + 40);
 
 
     // Etiquetas
+	//input1.position(x_par + 70, y_par + 63);
+    //input1.style('width', '50px');
     fill(0);
     textStyle(BOLD);
     rect(x1 + 20, y1 + 60, 30, 30);
@@ -517,19 +541,21 @@ function dib_parametros(x1, y1){
     textSize(14);
     fill(0, 255, 0);
     text('Ta', x1 + 35, y1 + 75); //Temperatura ambiental
-    text('Pa', x1 + 35, y1 + 115); //presion
-    text('Ha', x1 + 35, y1 + 155); //Humedad
+    text('ρ', x1 + 35, y1 + 115); //densidad
+    text('ν', x1 + 35, y1 + 155); //viscosidad dinamica
 	
 	// Unidades
     fill(0);
+	text(round(dens,5), x_par+95, y_par+115);
+	text(round(vis,3), x_par +75, y_par+155);
+    text('°C', input1.x + input1.width + 50, input1.y + 12);
+    text('kg/m^3', input1.x + input1.width + 50, y_par + 115);
+	text('x10^(-3)', input1.x + input1.width+5, y_par + 155);
+    text('Pa.s', input1.x + input1.width + 50, y_par + 155);
 
-    text('°C', input1.x + input1.width + 60, input1.y + 12);
-    text('kPa', input2.x + input2.width + 60, input2.y + 12);
-    text('% HR', input3.x + input3.width + 60, input3.y + 12);
-
-    text(temp_ambiente, input1.x + input1.width + 25, input1.y + 12);
-    text(pres_ambiente, input2.x + input2.width + 25, input2.y + 12);
-    text(hum_ambiente, input3.x + input3.width + 25, input3.y + 12);
+    text(round(temp_ambiente,1), input1.x + input1.width + 25, input1.y + 12);
+    //text(pres_ambiente, input2.x + input2.width + 25, input2.y + 12);
+    //text(hum_ambiente, input3.x + input3.width + 25, input3.y + 12);
 	fill(0);
     textSize(12);
 }
@@ -537,22 +563,22 @@ function dib_parametros(x1, y1){
 function dib_controles(x2,y2) {
     fill(250);
     strokeWeight(1);
-    rect(x2, y2, 360, 200);
+    rect(x2, y2, 490, 200);
     // Texto
     fill('black');
     textStyle(BOLD);
     textSize(14);
-    text('CONTROLES', x2 + 380 / 2, y2 + 20);
+    text('CONTROLES', x2 + 490 / 2, y2 + 20);
   
     fill(0);
     rect(x2 + 40, y2 + 95 + rz + 30, 80, 30);
-	rect(x2 + 220, y2 + 95 + rz + 30, 80, 30);
+	rect(x2 + 370, y2 + 95 + rz + 30, 80, 30);
 
     textSize(12);
     text('VELOCIDAD DE MOTORES', x2 + 80, y2 + 80 + rz + 30);
-	text('APERTURA', x2 + 260, y2 + 80 + rz + 30);
+	text('APERTURA', x2 + 410, y2 + 80 + rz + 30);
   
-    // Control de velocidad
+    // Control de velocidad----------------------------------
     fill('black');
     //Lineas gruesas
     push();
@@ -638,32 +664,106 @@ function dib_controles(x2,y2) {
     text('3000', x2 + 80 + 65 * cos(315), y2 + 80 + 65 * sin(315));
     text('4000', x2 + 80 + 65 * cos(45), y2 + 80 + 65 * sin(45));
 	
+	// Control de apertura----------------------------------
+    fill('black');
+    //Lineas gruesas
+    push();
+    var i;
+    translate(x2 + 410, y2 + 80);
+    rotate(135);
+    strokeWeight(2);
+    line(0, 0, 50, 0);
+    for(i = 1; i < 5; i++){
+      rotate(67.5);
+      strokeWeight(2);
+      line(0, 0, 50, 0);
+    }
+    pop();
+    //Circulo
+    fill(110);
+    strokeWeight(3);
+    ellipse(x2 + 410, y2 + 80, rz * 2, rz * 2);
+    // Logica de movimiento de indicador
+    if(drag2){
+        dx2 = mouseX - (x2+410);
+        dy2 = mouseY - (y2+80);
+        angle2 = atan2(dy2,dx2);
+        if(oldAngle2>angle2){
+          sent2 = 'Horario';
+        } else{
+          sent2 = 'AntiHorario';
+        }
+        fill(0,153,0);
+    } else{
+        fill(255);
+    }
+    //Dibujar indicador
+    if (angle2 >= 135 && angle2 <= 180){ //Entre 0 y 16.7 %
+        calcAngle2 = map(angle2,135,180,0,16.7);
+    } else if(angle2 <= 0 && angle2 >= -180){ //Entre 16.7 y 83.3 %
+        calcAngle2 = map(angle2,-180,0,16.7,83.3);
+    } else if(angle2 >= 0 && angle2 <= 45){ //Entre 83.3 y 100 %
+        calcAngle2 = map(angle2,0,45,83.3,100);
+    } else if(angle2 > 45 && angle2 < 135){ //Zona no valida
+        if(sent2 == 'Horario'){
+            angle2 = 135;
+            calcAngle2 = 0;
+        } else if(sent2 == 'AntiHorario'){
+            angle2 = 45;
+            calcAngle2 = 100;
+        }
+    }
+    //Dibujo de bola
+    push();
+    translate(x2+410,y2+80);
+    rotate(angle2);
+    ellipse(rz-15,0,10,10);
+    pop();
+    //Dibujo indicador
+    fill(0);
+    oldAngle2 = angle2;
+    textAlign(CENTER);
+    ap = float(calcAngle2);
+    fill(0, 255, 0);
+    textSize(14);
+    //text(velocidadRPM, x2 + 60, y2 + 110 + rz + 30);
+    //text('RPM', x2 + 100, y2 + 110 + rz + 30);
+    //Texto marcadores
+    fill('black'); 
+    textSize(12);
+    textStyle(NORMAL);
+    text('0', x2 + 410 + 65 * cos(135), y2 + 80 + 65 * sin(135));
+    text('25', x2 + 410 + 65 * cos(202.5), y2 + 80 + 65 * sin(202.5));
+    text('50', x2 + 410 + 65 * cos(270), y2 + 80 + 65 * sin(270));
+    text('75', x2 + 410 + 65 * cos(337.5), y2 + 80 + 65 * sin(337.5));
+	text('100', x2 + 410 + 65 * cos(45), y2 + 80 + 65 * sin(45));
+	
 	//Dibujo de control modo de operacion
 	if(mod_operacion){
 		fill('rgb(165,75,75)');
 		strokeWeight(1);
-		rect(x2 + 180, y2 + 40 , 50, 50);
+		rect(x2 + 220, y2 + 40 , 50, 50);
 		fill('red');
-		rect(x2 + 280, y2 + 40 , 50, 50);
+		rect(x2 + 220, y2 + 120 , 50, 50);
 	}else if(mod_vision){
 		fill('red');
 		strokeWeight(1);
-		rect(x2 + 180, y2 + 40 , 50, 50);
+		rect(x2 + 220, y2 + 40 , 50, 50);
 		fill('rgb(165,75,75)');
-		rect(x2 + 280, y2 + 40 , 50, 50);
+		rect(x2 + 220, y2 + 120 , 50, 50);
 	}
 	fill(0);
 	textSize(12);
-    text('VISUALIZACIÓN', x2 + 205, y2 + 110);
-	text('OPERACIÓN', x2 + 305, y2 + 110);
+    text('VISUALIZACIÓN', x2 + 245, y2 + 105);
+	text('OPERACIÓN', x2 + 245, y2 + 185);
 	//Valor de apertura
     fill(0);
     textAlign(CENTER);
-    ap = slider.value();
+    //ap = slider.value();
     fill(0, 255, 0);
     textSize(14);
-    text(ap, x2 + 250, y2 + 110 + rz + 30);
-    text('%', x2 + 280, y2 + 110 + rz + 30);
+    text(round(ap,1), x2 + 410, y2 + 110 + rz + 30);
+    text('%', x2 + 440, y2 + 110 + rz + 30);
 }
 
 function dib_visualizacion(vis_num){
@@ -797,17 +897,6 @@ function dib_operacion(vis_num){
 		fill('blue');
 		strokeWeight(1);
 		rect(340, 715-int(altura*355.00/150.00),230, int(altura*355.00/150.00));
-		//fill(0);
-		//rect(490, 310, 80, 30);
-		//fill(0, 255, 0);
-		//textSize(14);
-		//if(is_paralelo){
-		//	text(round(caudal,2), 510, 335);
-		//	text('m3/h', 540, 335);
-		//}else{
-		//	text(0, 510, 335);
-		//	text('m3/h', 540, 335);
-		//}
 		fill(0);
 		textSize(15);
 		text(0,630, 715);
@@ -873,6 +962,24 @@ function dib_operacion(vis_num){
 			rect(446,304,16,(554+int((alt_acc/2)*(432/400)))-304);
 			//presion baja en tramo con accesorios
 			rect(358,304,16,(554-int((alt_acc/2)*(432/400)))-304);
+			if(abs(alt_tub-alt_tub_ob)<0.5){
+				fill(0);
+				rect(660, 530, 80, 30);
+				textAlign(CENTER);
+				fill(0, 255, 0);
+				textSize(14);
+				text(round(alt_tub_ob,2), 690, 545);
+				text('mm', 725, 545);
+			}
+			if(abs(alt_acc-alt_acc_ob)<0.5){
+				fill(0);
+				rect(240, 530, 80, 30);
+				textAlign(CENTER);
+				fill(0, 255, 0);
+				textSize(14);
+				text(round(alt_acc_ob,2), 270, 545);
+				text('mm', 305, 545);
+			}
 		}else{
 			//base de mercurio
 			fill('rgb(100,110,120)');
