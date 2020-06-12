@@ -116,38 +116,38 @@ let dens_table = [999.9, 999.7, 999.1, 998.0, 997.0, 996.0, 994.0, 992.1];
 let vis_table = [1.519, 1.307, 1.138, 1.002, 0.891, 0.798, 0.720, 0.653];
 
 function preload(){
-	logo_pucp = loadImage('logo_pucp.png');
-	logo_laben = loadImage('logo_laben.png');
+	logo_pucp = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/logo_pucp.png');
+	logo_laben = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/logo_laben.png');
 	//Visualización
-	vis_lado = loadImage('vis_lado.png');
-	vis_iso_1 = loadImage('vis_iso_1.png');
-	vis_iso_2 = loadImage('vis_iso_2.png');
-	vis_iso_3 = loadImage('vis_iso_3.png');
-	vis_iso_4 = loadImage('vis_iso_4.png');
+	vis_lado = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/vis_lado.png');
+	vis_iso_1 = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/vis_iso_1.png');
+	vis_iso_2 = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/vis_iso_2.png');
+	vis_iso_3 = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/vis_iso_3.png');
+	vis_iso_4 = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/vis_iso_4.png');
 	//Operación
 	// 1. Valvulas
-	v_base_des_b1_abierta = loadImage('V_base_des_b1_abierta.png');
-	v_base_des_b1_cerrada = loadImage('V_base_des_b1_cerrada.png');
-	v_base_intermedia_abierta = loadImage('V_base_intermedia_abierta.png');
-	v_base_intermedia_cerrada = loadImage('V_base_intermedia_cerrada.png');
-	v_base_paralelo_abierta = loadImage('V_base_paralelo_abierta.png');
-	v_base_paralelo_cerrada = loadImage('V_base_paralelo_cerrada.png');
-	v_base_serie_abierta = loadImage('V_base_serie_abierta.png');
-	v_base_serie_cerrada = loadImage('V_base_serie_cerrada.png');
-	v_base_suc_b1_abierta = loadImage('V_base_suc_b1_abierta.png');
-	v_base_suc_b1_cerrada = loadImage('V_base_suc_b1_cerrada.png');
-	v_base_suc_b2_abierta = loadImage('V_base_suc_b2_abierta.png');
-	v_base_suc_b2_cerrada = loadImage('V_base_suc_b2_cerrada.png');
+	v_base_des_b1_abierta = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_des_b1_abierta.png');
+	v_base_des_b1_cerrada = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_des_b1_cerrada.png');
+	v_base_intermedia_abierta = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_intermedia_abierta.png');
+	v_base_intermedia_cerrada = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_intermedia_cerrada.png');
+	v_base_paralelo_abierta = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_paralelo_abierta.png');
+	v_base_paralelo_cerrada = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_paralelo_cerrada.png');
+	v_base_serie_abierta = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_serie_abierta.png');
+	v_base_serie_cerrada = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_serie_cerrada.png');
+	v_base_suc_b1_abierta = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_suc_b1_abierta.png');
+	v_base_suc_b1_cerrada = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_suc_b1_cerrada.png');
+	v_base_suc_b2_abierta = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_suc_b2_abierta.png');
+	v_base_suc_b2_cerrada = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/V_base_suc_b2_cerrada.png');
 	// 2. Banco en paralelo
-	base_paralelo_0 = loadImage('Base_paralelo_0.png');
-	base_paralelo_25 = loadImage('Base_paralelo_25.png');
-	base_paralelo_50 = loadImage('Base_paralelo_50.png');
-	base_paralelo_75 = loadImage('Base_paralelo_75.png');
-	base_paralelo_100 = loadImage('Base_paralelo_100.png');
-	base_paralelo_125 = loadImage('Base_paralelo_125.png');
-	manometro = loadImage('Manometro_u_0.png');
-	visor = loadImage('visor_2.png');
-	visor_man = loadImage('visor_man.png');
+	base_paralelo_0 = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/Base_paralelo_0.png');
+	base_paralelo_25 = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/Base_paralelo_25.png');
+	base_paralelo_50 = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/Base_paralelo_50.png');
+	base_paralelo_75 = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/Base_paralelo_75.png');
+	base_paralelo_100 = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/Base_paralelo_100.png');
+	base_paralelo_125 = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/Base_paralelo_125.png');
+	manometro = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/Manometro_u_0.png');
+	visor = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/visor_2.png');
+	visor_man = loadImage('https://raw.githubusercontent.com/arturobh143/Bombas_test/gh-pages/visor_man.png');
 }
 
 function setup(){
